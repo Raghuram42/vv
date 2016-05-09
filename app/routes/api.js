@@ -1,6 +1,9 @@
 var User=require('../models/user');
 var config=require('../../config');
 
+var Poll=require('../models/poll');
+
+
 var secretKey=config.secretKey;
  
 var jsonwebtoken=require('jsonwebtoken');
@@ -10,7 +13,7 @@ var jsonwebtoken=require('jsonwebtoken');
 function createToken(user){
    
    var token = jsonwebtoken.sign({
-   	_id: user._id,
+   	id: user._id,
    	name: user.name,
    	username: user.username
    },secretKey,{
@@ -104,9 +107,90 @@ api.use(function(req,res,next){
 
 });
 
-api.get('/',function(req,res){
- res.json("Hello world!");
-});
+api.route('/poll')
+ 
+  .post(function(req,res){
+      
+    var poll =new Poll({
+      id1:req.decoded.id,
+      title:req.body.title,
+      categeory:req.body.categeory,
+      sub:req.body.sub,
+      img:req.body.img,
+      location:req.body.location,
+      age:req.body.age,
+      idd:req.body.idd,
+      entity:req.body.entity,
+      marital:req.body.marital,
+      sdate:new Date(),
+      edate:new Date()
+    });
+    poll.save(function(err){
+      if(err){
+        res.send(err);
+        return;
+      }
+        num=1;
+      res.json({message:"New Poll is Created!"});
+    });
+  })
+
+  .get(function(req,res){
+
+
+    Poll.find({id1:req.decoded.id},function(err,polls){
+
+      if(err){
+        res.send(err);
+        return;
+      }
+      res.send(polls);
+    });
+  });
+
+/*api.route('/ques')
+
+  .post(function(req,res){
+
+    if(num===1){
+
+    var  ques=new Ques({
+      id2:req.decoded.id1,
+      img:req.body.img,
+      Waq:req.body.Waq,
+      display:req.body.display,
+      results:new Date(),
+      sdate:new Date(),
+      edate:new Date()
+    });
+
+     ques.save(function(err){
+      if(err){
+        res.send(err);
+        return;
+      }
+        
+      res.json({message:"New Question is Created!"});
+    });
+
+}
+else{
+  res.json({message:"Create the Poll first!"});
+}
+  })
+
+
+  .get(function(req,res){
+
+    Ques.find({id2:req.id1},function(err,questions){
+
+      if(err){
+        res.send(err);
+        return;
+      }
+      res.send(questions);
+    });
+  });*/
 return api;
 }
 

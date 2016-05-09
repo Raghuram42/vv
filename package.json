@@ -15,6 +15,6 @@
     "jsonwebtoken": "^6.2.0",
     "mongoose": "^4.4.15",
     "morgan": "^1.7.0",
-    "test" : "1.0.0"
+    
   }
 }
