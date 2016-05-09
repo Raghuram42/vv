@@ -148,6 +148,10 @@ api.route('/poll')
     });
   });
 
+  api.get('/me',function(req,res){
+    res.json(req.decoded);
+  })
+
 /*api.route('/ques')
 
   .post(function(req,res){
