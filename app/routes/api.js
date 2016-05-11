@@ -3,7 +3,7 @@ var config=require('../../config');
 
 var Poll=require('../models/poll');
 
-
+num=0;
 var secretKey=config.secretKey;
  
 var jsonwebtoken=require('jsonwebtoken');
@@ -71,16 +71,18 @@ api.post('/login',function(req,res){
   	} else {
                var token= createToken(user);
 
-               res.json({
-               	success:true,
-               	message:"Successfuly Login",
-               	token:token
-               });
-  	}
+               res.json({success:true,
+			   message:"You r logged and create a poll",
+			   token:token});
+                 	}
   }
   });
 });
 
+api.get('/login',function(req,res){
+    res.sendFile(__dirname +'../../public/home.html');
+
+});
 
 api.use(function(req,res,next){
      console.log('Lets start Middleware');
@@ -113,6 +115,7 @@ api.route('/poll')
       
     var poll =new Poll({
       id1:req.decoded.id,
+	  _id:ObjectId(),
       title:req.body.title,
       categeory:req.body.categeory,
       sub:req.body.sub,
@@ -152,22 +155,21 @@ api.route('/poll')
     res.json(req.decoded);
   })
 
-/*api.route('/ques')
+api.route('/ques')
 
   .post(function(req,res){
 
-    if(num===1){
-
     var  ques=new Ques({
-      id2:req.decoded.id1,
-      img:req.body.img,
+      title:req.body.title,
+      img2:req.body.img,
       Waq:req.body.Waq,
       display:req.body.display,
       results:new Date(),
-      sdate:new Date(),
-      edate:new Date()
+      sdate:Date(),
+      edate:Date()
     });
 
+  if(Poll.find({title})===Ques.find({title})){
      ques.save(function(err){
       if(err){
         res.send(err);
@@ -176,12 +178,9 @@ api.route('/poll')
         
       res.json({message:"New Question is Created!"});
     });
+}
 
-}
-else{
-  res.json({message:"Create the Poll first!"});
-}
-  })
+})
 
 
   .get(function(req,res){
@@ -194,10 +193,9 @@ else{
       }
       res.send(questions);
     });
-  });*/
+  });
 return api;
 }
-
-
+   
 
 
